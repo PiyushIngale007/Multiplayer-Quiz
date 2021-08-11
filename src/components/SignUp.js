@@ -4,7 +4,7 @@ import boy from "./images/boy.png";
 import firebase from "./firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 const SignUp = () => {
   const user = useSelector((state) => state.user.userDetails);
@@ -94,6 +94,28 @@ const SignUp = () => {
             <button onClick={() => signUp()} className="btn btn-success btn2">
               <i className="fas fa-user-plus"></i>Sign up
             </button>
+            <p
+              style={{
+                textAlign: "center",
+                fontFamily: "Roboto",
+                fontSize: "1.5rem",
+                color: "white",
+              }}
+            >
+              OR
+            </p>
+            <Link to="/login">
+              <button
+                onClick="location.href='signUp.html'"
+                className="btn btn-primary btn1"
+              >
+                <i className="fas fa-sign-in-alt"></i> Login
+              </button>
+            </Link>
+            <div className="col-12 forget"></div>
+            {/* <a href="#" className="area" onClick={() => Reset_Email()}>
+              Forgot Password ?
+            </a> */}
           </div>
         </div>
       </div>

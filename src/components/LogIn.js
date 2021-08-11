@@ -1,7 +1,7 @@
 import React from "react";
 import "./LogIn.css";
 import boy from "./images/boy.png";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
 import firebase from "./firebase";
@@ -99,13 +99,24 @@ const LogIn = () => {
             >
               <i className="fas fa-sign-in-alt"></i> Login
             </button>
-            <button
-              onClick="location.href='signUp.html'"
-              className="btn btn-success btn2"
+            <p
+              style={{
+                textAlign: "center",
+                fontFamily: "Roboto",
+                fontSize: "1.5rem",
+                color: "white",
+              }}
             >
-              <i className="fas fa-user-plus"></i>Sign up
-            </button>
-
+              OR
+            </p>
+            <Link to="/signup">
+              <button
+                onClick="location.href='signUp.html'"
+                className="btn btn-success btn2"
+              >
+                <i className="fas fa-user-plus"></i>Sign up
+              </button>
+            </Link>
             <div className="col-12 forget"></div>
             <a href="#" className="area" onClick={() => Reset_Email()}>
               Forgot Password ?
