@@ -1,7 +1,69 @@
 import React from 'react';
 import './LogIn.css';
 import boy from './images/boy.png';
+import { Redirect } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserDetails } from '../features/user/userSlice';
+import firebase from './firebase';
 const LogIn = () => {
+  const user = useSelector((state) => state.user.userDetails);
+  const dispatch = useDispatch();
+  const [loggedIn, setloggedIn] = React.useState(false);
+
+  const login = () => {
+    const email = document.getElementById('usr').value;
+    const password = document.getElementById('pass').value;
+
+    if (email != '' && password != '') {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user.displayName);
+          setTimeout(() => {
+            let data = {
+              name: user.displayName,
+              user_id: user.uid,
+              email: user.email,
+            };
+
+            dispatch(setUserDetails(data));
+            setloggedIn(true);
+          }, 1000);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorMessage);
+          console.log(errorMessage);
+        });
+    } else {
+      alert('Please fill All details');
+    }
+  };
+  const Reset_Email = () => {
+    const email = document.getElementById('usr').value;
+    if (email != '') {
+      firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then(function () {
+          console.log('Email sent.');
+          alert('Please Check Your Mail to reset the password.');
+        })
+        .catch(function (error) {
+          // An error happened.
+          console.log(error);
+        });
+    } else {
+      alert('Please Enter your Email Id.');
+    }
+  };
+  if (loggedIn) {
+    return <Redirect push to='/home' />;
+  }
   return (
     <div className='modal-dialog text-center'>
       <div className='col-sm-8 main-section'>
@@ -30,7 +92,7 @@ const LogIn = () => {
             </div>
           </form>
           <button
-            onClick='login()'
+            onClick={() => login()}
             type='submit'
             className='btn btn-primary btn1'
           >
@@ -44,7 +106,7 @@ const LogIn = () => {
           </button>
 
           <div className='col-12 forget'></div>
-          <a href='#' className='area' onClick='Reset_Email()'>
+          <a href='#' className='area' onClick={() => Reset_Email()}>
             Forgot Password ?
           </a>
         </div>
