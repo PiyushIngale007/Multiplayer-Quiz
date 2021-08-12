@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -9,18 +9,76 @@ import JavaQuiz from './components/Java/JavaQuiz';
 import JavaScriptQuiz from './components/JavaScript/JavaScriptQuiz';
 import PythonQuiz from './components/Python/PythonQuiz';
 import CppQuiz from './components/Cpp/CppQuiz';
+import firebase from './components/firebase';
+import GuardedRoute from './GaurdedRoute';
+import { useDispatch } from 'react-redux';
+import { setUserDetails } from './features/user/userSlice';
 function App() {
+  const [isAuthenticated, setisAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setisAuthenticated(true);
+        setIsLoading(false);
+        let data = {
+          name: user.displayName,
+          user_id: user.uid,
+          email: user.email,
+        };
+
+        dispatch(setUserDetails(data));
+      }
+    });
+    return () => {
+      console.log('cleanup');
+    };
+  }, [dispatch]);
+
   return (
     <div className='App'>
       <Router>
         <Switch>
-          <Route exact path='/home' component={Home} />
+          <GuardedRoute
+            exact
+            path='/'
+            component={Home}
+            auth={isAuthenticated}
+            loading={isLoading}
+          />
           <Route exact path='/login' component={LogIn} />
           <Route exact path='/signup' component={SignUp} />
-          <Route exact path='/javaquiz' component={JavaQuiz} />
-          <Route exact path='/cppquiz' component={CppQuiz} />
-          <Route exact path='/javascriptquiz' component={JavaScriptQuiz} />
-          <Route exact path='/pythonquiz' component={PythonQuiz} />
+          <GuardedRoute
+            exact
+            path='/javaquiz'
+            component={JavaQuiz}
+            auth={isAuthenticated}
+            loading={isLoading}
+          />
+          <GuardedRoute
+            exact
+            path='/cppquiz'
+            component={CppQuiz}
+            auth={isAuthenticated}
+            loading={isLoading}
+          />
+          <GuardedRoute
+            exact
+            path='/javascriptquiz'
+            component={JavaScriptQuiz}
+            auth={isAuthenticated}
+            loading={isLoading}
+          />
+          <GuardedRoute
+            exact
+            path='/pythonquiz'
+            component={PythonQuiz}
+            auth={isAuthenticated}
+            loading={isLoading}
+          />
         </Switch>
       </Router>
     </div>
