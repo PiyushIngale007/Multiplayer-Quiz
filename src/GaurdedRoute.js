@@ -1,8 +1,8 @@
-import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import React from "react";
+import { Route, Redirect } from "react-router-dom";
 
 const GuardedRoute = ({ component: Component, auth, loading, ...rest }) => {
-  console.log('auth:' + auth);
+  console.log("auth:" + auth);
   return (
     <Route
       {...rest}
@@ -10,7 +10,7 @@ const GuardedRoute = ({ component: Component, auth, loading, ...rest }) => {
         auth === true ? (
           <Component {...props} />
         ) : loading === false ? (
-          <Redirect to='/login' />
+          <Redirect to="/login" />
         ) : (
           <></>
         )
