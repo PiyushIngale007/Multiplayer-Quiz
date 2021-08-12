@@ -25,7 +25,6 @@ function App() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setisAuthenticated(true);
-        setIsLoading(false);
         let data = {
           name: user.displayName,
           user_id: user.uid,
@@ -34,6 +33,7 @@ function App() {
 
         dispatch(setUserDetails(data));
       }
+      setIsLoading(false);
     });
     return () => {
       console.log("cleanup");
