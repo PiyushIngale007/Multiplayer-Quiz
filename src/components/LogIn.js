@@ -1,6 +1,6 @@
 import React from 'react';
 import './LogIn.css';
-import boy from './images/boy.png';
+import boy from '../assets/images/boy.png';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserDetails } from '../features/user/userSlice';

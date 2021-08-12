@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './LogIn.css';
-import boy from './images/boy.png';
+import boy from '../assets/images/boy.png';
 import firebase from './firebase';
 import { useDispatch } from 'react-redux';
 import { setUserDetails } from '../features/user/userSlice';

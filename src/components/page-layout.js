@@ -104,12 +104,7 @@ const PageLayout = (props) => {
           </SidebarFooter>
         </ProSidebar>
         <main className='content' style={{ width: '100%' }}>
-          <div className='fill-flex'>
-            <div className='header justify-content-center bg-primary align-items-center'>
-              <h3 className='text-light'>{props.headerText}</h3>
-            </div>
-          </div>
-          <div className='page-content container py-3'>{props.children}</div>
+          <div>{props.children}</div>
         </main>
       </aside>
     </div>
