@@ -15,6 +15,7 @@ import firebase from "./components/firebase";
 import GuardedRoute from "./GaurdedRoute";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./features/user/userSlice";
+import Profile from "./components/Profile";
 function App() {
   const [isAuthenticated, setisAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -87,6 +88,13 @@ function App() {
               exact
               path="/pythonquiz"
               component={PythonQuiz}
+              auth={isAuthenticated}
+              loading={isLoading}
+            />
+            <GuardedRoute
+              exact
+              path="/profile"
+              component={Profile}
               auth={isAuthenticated}
               loading={isLoading}
             />
