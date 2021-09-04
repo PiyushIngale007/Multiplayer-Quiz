@@ -1,13 +1,15 @@
-import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
+import firebase from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,42 +35,52 @@ const Header = (props) => {
     setAnchorEl(null);
   };
 
+  const signOut = () => {
+    firebase.auth().signOut();
+  };
+
   return (
     <>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar>
-          <Typography variant='h6' className={classes.title}>
+          <Typography variant="h6" className={classes.title}>
             {props.pageName}
           </Typography>
-          <Button color='inherit'>Quiz</Button>
+          <Button color="inherit">Quiz</Button>
           <div>
             <IconButton
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
               onClick={handleMenu}
-              color='inherit'
+              color="inherit"
             >
               <AccountCircle />
             </IconButton>
             <Menu
-              id='menu-appbar'
+              id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={open}
               onClose={handleClose}
             >
-              <MenuItem>Profile</MenuItem>
+              <MenuItem>
+                <Link to="/profile">Profile </Link>
+              </MenuItem>
               <MenuItem>My account</MenuItem>
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem>
+                <Link to="/login">
+                  <a onClick={signOut}>Sign out</a>
+                </Link>
+              </MenuItem>
             </Menu>
           </div>
         </Toolbar>
