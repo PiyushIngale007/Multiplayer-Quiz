@@ -28,8 +28,8 @@ function App() {
         setisAuthenticated(true);
         let data = {
           name: user.displayName,
-          user_id: user.uid,
           email: user.email,
+          userID: user.uid,
         };
 
         dispatch(setUserDetails(data));
