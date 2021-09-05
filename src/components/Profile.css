@@ -1,11 +1,15 @@
-img {
+.avatar {
   border-radius: 100%;
-  width: 250px;
+  width: 215px;
   margin-top: 20px;
 }
 
 .profile-container {
   text-align: center;
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bio > button {
@@ -15,4 +19,12 @@ img {
 .name {
   margin: 5px;
   font-size: 25px;
+}
+.profile {
+  display: flex;
+  justify-content: center;
+}
+
+.posts {
+  flex: 1 0 0;
 }

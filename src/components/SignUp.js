@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
 import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
-// import { createAvatar } from "@dicebear/avatars";
-// import * as style from "@dicebear/avatars-gridy-sprites";
+import { createAvatar } from "@dicebear/avatars";
+import * as style from "@dicebear/avatars-gridy-sprites";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -24,8 +24,14 @@ const SignUp = () => {
     //   .then((data) => console.log(data));
     if (user.name !== null) {
       try {
+        let svg = createAvatar(style, {
+          seed: user.name,
+          // ... and other options
+        });
+        console.log(svg);
         const mongouser = {
           ...user,
+          svgAvatar: svg,
           followers: 0,
           following: 0,
           followersIDs: [],
@@ -47,12 +53,6 @@ const SignUp = () => {
 
     const password = document.getElementById("pass").value;
     const name = document.getElementById("name").value;
-
-    // let svg = createAvatar(style, {
-    //   seed: name,
-    //   // ... and other options
-    // });
-    // console.log(svg);
 
     if (email !== "" && password !== "" && name !== "") {
       firebase

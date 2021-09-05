@@ -9,37 +9,38 @@ import axios from "axios";
 
 export default function Profile() {
   const user = useSelector((state) => state.user);
-  const [followers, setFollowers] = useState(-1);
-  const [following, setFollowing] = useState(-1);
+  const [userData, setuserData] = useState({});
 
-  useEffect(async () => {
-    const res = await axios.get(
-      "http://localhost:5000/api/user/profile/" + user.userID
-    );
+  useEffect(() => {
+    const fetchdata = async () => {
+      const res = await axios.get(
+        "http://localhost:5000/api/user/profile/" + user.userID
+      );
 
-    setFollowers(res.data.followers);
-    setFollowing(res.data.following);
-  }, []);
+      setuserData(res.data);
+    };
+    fetchdata();
+  }, [user.userID]);
 
   return (
     <PageLayout>
       <Header pageName="Profile" />
       <div className="profile">
         <div className="profile-container">
-          <img
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            alt="avatar"
+          <div
+            dangerouslySetInnerHTML={{ __html: userData.svgAvatar }}
             className="avatar"
-          />
+          ></div>
+
           <p className="name">{user.name}</p>
           <div className="bio">
             <Button variant="outlined" color="primary" className="btn">
               <PersonIcon style={{ marginInline: "5px" }} />
-              {followers} Followers
+              {userData.followers} Followers
             </Button>
             <Button variant="outlined" color="primary" className="btn">
               <PersonIcon style={{ marginInline: "5px" }} />
-              {following} Following
+              {userData.following} Following
             </Button>
           </div>
         </div>

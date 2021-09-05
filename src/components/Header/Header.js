@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import firebase from "../firebase";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +27,21 @@ const useStyles = makeStyles((theme) => ({
 const Header = (props) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const user = useSelector((state) => state.user);
+
+  const [userData, setuserData] = useState({});
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      const res = await axios.get(
+        "http://localhost:5000/api/user/profile/" + user.userID
+      );
+
+      setuserData(res.data);
+    };
+    fetchdata();
+  }, [user.userID]);
+
   const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -55,7 +72,10 @@ const Header = (props) => {
               onClick={handleMenu}
               color="inherit"
             >
-              <AccountCircle />
+              <div
+                dangerouslySetInnerHTML={{ __html: userData.svgAvatar }}
+                style={{ width: "40px" }}
+              ></div>
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -78,7 +98,7 @@ const Header = (props) => {
               <MenuItem>My account</MenuItem>
               <MenuItem>
                 <Link to="/login">
-                  <a onClick={signOut}>Sign out</a>
+                  <p onClick={signOut}>Sign out</p>
                 </Link>
               </MenuItem>
             </Menu>
