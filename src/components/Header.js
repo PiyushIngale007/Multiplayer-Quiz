@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import firebase from "../utils/firebase";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import StickyBox from "react-sticky-box/dist/esnext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +58,7 @@ const Header = (props) => {
   };
 
   return (
-    <>
+    <StickyBox>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
@@ -105,7 +106,7 @@ const Header = (props) => {
           </div>
         </Toolbar>
       </AppBar>
-    </>
+    </StickyBox>
   );
 };
 
