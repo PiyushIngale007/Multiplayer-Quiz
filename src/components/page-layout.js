@@ -34,8 +34,13 @@ const PageLayout = (props) => {
   };
   return (
     <div className="layout">
-      <aside style={{ display: "flex" }}>
-        <div style={{ display: "flex", alignItems: "flex-start" }}>
+      <aside style={{ display: "flex", overflow: "inherit" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+          }}
+        >
           <StickyBox>
             <ProSidebar collapsed={status} style={{ height: "100vh" }}>
               <SidebarHeader>
