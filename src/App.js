@@ -4,18 +4,18 @@ import "./App.css";
 import ReactLoading from "react-loading";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Home from "./components/Home";
-import LogIn from "./components/LogIn";
-import SignUp from "./components/SignUp";
-import JavaQuiz from "./components/Java/JavaQuiz";
-import JavaScriptQuiz from "./components/JavaScript/JavaScriptQuiz";
-import PythonQuiz from "./components/Python/PythonQuiz";
-import CppQuiz from "./components/Cpp/CppQuiz";
-import firebase from "./components/firebase";
+import Home from "./pages/Home";
+import LogIn from "./pages/LogIn";
+import SignUp from "./pages/SignUp";
+import JavaQuiz from "./pages/JavaQuiz";
+import JavaScriptQuiz from "./pages/JavaScriptQuiz";
+import PythonQuiz from "./pages/PythonQuiz";
+import CppQuiz from "./pages/CppQuiz";
+import firebase from "./utils/firebase";
 import GuardedRoute from "./GaurdedRoute";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./features/user/userSlice";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
 function App() {
   const [isAuthenticated, setisAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

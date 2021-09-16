@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "./LogIn.css";
+import "./css/LogIn.css";
 import boy from "../assets/images/boy.png";
-import firebase from "./firebase";
+import firebase from "../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
 import { Redirect, Link } from "react-router-dom";
@@ -16,17 +16,10 @@ const SignUp = () => {
 
   useEffect(() => {
     console.log(user);
-    // fetch("http://localhost:5000/api/users", {
-    //   method: "POST",
-    //   body: JSON.stringify(user),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => console.log(data));
     if (user.name !== null) {
       try {
         let svg = createAvatar(style, {
           seed: user.name,
-          // ... and other options
         });
         console.log(svg);
         const mongouser = {

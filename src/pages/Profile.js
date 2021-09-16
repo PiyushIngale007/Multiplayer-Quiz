@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import PageLayout from "./page-layout";
-import Header from "./Header/Header";
-import "./Profile.css";
+import PageLayout from "../components/page-layout";
+import Header from "../components/Header";
+import "./css/Profile.css";
 import { Button } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import { useSelector } from "react-redux";
