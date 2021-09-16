@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import PageLayout from "./page-layout";
-import Header from "./Header/Header";
-import socket from "./socketio";
+import PageLayout from "../components/page-layout";
+import Header from "../components/Header";
+import socket from "../utils/socketio";
 
 const Home = () => {
   useEffect(() => {

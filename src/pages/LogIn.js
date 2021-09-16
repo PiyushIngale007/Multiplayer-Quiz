@@ -1,10 +1,10 @@
 import React from "react";
-import "./LogIn.css";
+import "./css/LogIn.css";
 import boy from "../assets/images/boy.png";
 import { Link, Redirect } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
-import firebase from "./firebase";
+import firebase from "../utils/firebase";
 const LogIn = () => {
   const dispatch = useDispatch();
   const [loggedIn, setloggedIn] = React.useState(false);
