@@ -1,82 +1,73 @@
 import React, { useState, useEffect } from "react";
 import "./css/LogIn.css";
 import boy from "../assets/images/boy.png";
-import firebase from "../utils/firebase";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
 import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
-import { createAvatar } from "@dicebear/avatars";
-import * as style from "@dicebear/avatars-gridy-sprites";
+import { Email } from "@material-ui/icons";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const [signedUp, setsignedUp] = useState(false);
   const user = useSelector((state) => state.user);
+  const [Name, setName] = useState("");
+  const [UserName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    console.log(user);
-    if (user.name !== null) {
-      try {
-        let svg = createAvatar(style, {
-          seed: user.name,
-        });
-        console.log(svg);
-        const mongouser = {
-          ...user,
-          svgAvatar: svg,
-          followers: 0,
-          following: 0,
-          followersIDs: [],
-          followingIDs: [],
-        };
-        axios
-          .post("http://localhost:5000/api/user/", mongouser)
-          .then(function (response) {
-            console.log(response);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }, [user]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const signUp = () => {
-    const email = document.getElementById("usr").value;
+    if (email !== "" && password !== "" && Name !== "" && UserName !== "") {
+      setIsSubmitting(true);
+      setError("");
+      const genericErrorMessage =
+        "Something went wrong! Please try again later.";
+      let data = {
+        username: UserName,
+        password: password,
+        name: Name,
+        email: email,
+      };
+      axios
+        .post("http://localhost:5000/api/user/signup", data, {
+          withCredentials: true,
+        })
+        .then(async (response) => {
+          setIsSubmitting(false);
+          if (response.status !== 200) {
+            if (response.status === 400) {
+              setError("Please fill all the fields correctly!");
+            } else if (response.status === 401) {
+              setError("Invalid email and password combination.");
+            } else if (response.status === 500) {
+              console.log(response);
+              const data = response;
+              if (data.message) setError(data.message || genericErrorMessage);
+            } else {
+              setError(genericErrorMessage);
+            }
+          } else {
+            const { data } = response;
 
-    const password = document.getElementById("pass").value;
-    const name = document.getElementById("name").value;
-
-    if (email !== "" && password !== "" && name !== "") {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          var user = userCredential.user;
-          user.updateProfile({
-            displayName: name,
-          });
-
-          setTimeout(() => {
-            let data = {
-              name: user.displayName,
-              email: user.email,
-              userID: user.uid,
+            let data1 = {
+              name: UserName,
+              token: data.token,
+              userDetails: {},
+              // email: email,
             };
 
-            dispatch(setUserDetails(data));
+            dispatch(setUserDetails(data1));
 
             setsignedUp(true);
-          }, 1000);
-
-          // ...
+          }
         })
         .catch((error) => {
-          var errorMessage = error.message;
-          alert(errorMessage);
-
-          // ..
+          setIsSubmitting(false);
+          setError(genericErrorMessage);
         });
     } else {
       alert("Please fill All details");
@@ -102,6 +93,22 @@ const SignUp = () => {
                   id="name"
                   className="form-control"
                   placeholder="Name"
+                  onChange={(event) => {
+                    setName(event.target.value);
+                  }}
+                  value={Name}
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="Username"
+                  id="Username"
+                  className="form-control"
+                  placeholder="User Name"
+                  onChange={(event) => {
+                    setUserName(event.target.value);
+                  }}
+                  value={UserName}
                 />
               </div>
               <div className="form-group">
@@ -110,6 +117,10 @@ const SignUp = () => {
                   id="usr"
                   className="form-control"
                   placeholder="Email"
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                  }}
+                  value={email}
                 />
               </div>
               <div className="form-group">
@@ -119,10 +130,18 @@ const SignUp = () => {
                   id="pass"
                   className="form-control"
                   placeholder="Password"
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                  }}
+                  value={password}
                 />
               </div>
             </form>
-            <button onClick={() => signUp()} className="btn btn-success btn2">
+            <button
+              onClick={() => signUp()}
+              className="btn btn-success btn2"
+              disabled={isSubmitting}
+            >
               <i className="fas fa-user-plus"></i>Sign up
             </button>
             <p
@@ -141,9 +160,6 @@ const SignUp = () => {
               </button>
             </Link>
             <div className="col-12 forget"></div>
-            {/* <a href="#" className="area" onClick={() => Reset_Email()}>
-              Forgot Password ?
-            </a> */}
           </div>
         </div>
       </div>

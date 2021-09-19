@@ -7,13 +7,7 @@ const GuardedRoute = ({ component: Component, auth, loading, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        auth === true ? (
-          <Component {...props} />
-        ) : loading === false ? (
-          <Redirect to="/login" />
-        ) : (
-          <></>
-        )
+        auth === true ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   );

@@ -1,63 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import "./css/LogIn.css";
 import boy from "../assets/images/boy.png";
 import { Link, Redirect } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice";
-import firebase from "../utils/firebase";
+import axios from "axios";
+
 const LogIn = () => {
   const dispatch = useDispatch();
   const [loggedIn, setloggedIn] = React.useState(false);
+  const [UserName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
-  const login = () => {
-    const email = document.getElementById("usr").value;
-    const password = document.getElementById("pass").value;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-    if (email !== "" && password !== "") {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log(user.displayName);
-          setTimeout(() => {
-            let data = {
-              name: user.displayName,
-              email: user.email,
-              userID: user.uid,
+  const login = (e) => {
+    e.preventDefault();
+
+    if (password !== "" && UserName !== "") {
+      setIsSubmitting(true);
+      setError("");
+      const genericErrorMessage =
+        "Something went wrong! Please try again later.";
+      let data = {
+        username: UserName,
+        password: password,
+      };
+      axios
+        .post("http://localhost:5000/api/user/login", data, {
+          withCredentials: true,
+        })
+        .then(async (response) => {
+          setIsSubmitting(false);
+          if (response.status !== 200) {
+            if (response.status === 400) {
+              setError("Please fill all the fields correctly!");
+            } else if (response.status === 401) {
+              setError("Invalid email and password combination.");
+            } else {
+              setError(genericErrorMessage);
+            }
+          } else {
+            const { data } = response;
+
+            let data1 = {
+              name: UserName,
+              token: data.token,
+              userDetails: {},
+              // email: email,
             };
-            dispatch(setUserDetails(data));
+
+            dispatch(setUserDetails(data1));
+
             setloggedIn(true);
-          }, 1000);
+          }
         })
         .catch((error) => {
-          const errorMessage = error.message;
-          alert(errorMessage);
-          console.log(errorMessage);
+          setIsSubmitting(false);
+          setError(genericErrorMessage);
         });
     } else {
       alert("Please fill All details");
     }
   };
-  const Reset_Email = () => {
-    const email = document.getElementById("usr").value;
-    if (email !== "") {
-      firebase
-        .auth()
-        .sendPasswordResetEmail(email)
-        .then(function () {
-          console.log("Email sent.");
-          alert("Please Check Your Mail to reset the password.");
-        })
-        .catch(function (error) {
-          // An error happened.
-          console.log(error);
-        });
-    } else {
-      alert("Please Enter your Email Id.");
-    }
-  };
+
   if (loggedIn) {
     return <Redirect push to="/" />;
   }
@@ -70,13 +77,17 @@ const LogIn = () => {
               <img src={boy} alt="" />
             </div>
 
-            <form className="col-12">
+            <form onSubmit={login} className="col-12">
               <div className="form-group">
                 <input
-                  type="email"
-                  id="usr"
+                  type="Username"
+                  id="Username"
                   className="form-control"
-                  placeholder="Email Id"
+                  placeholder="User Name"
+                  onChange={(event) => {
+                    setUserName(event.target.value);
+                  }}
+                  value={UserName}
                 />
               </div>
               <div className="form-group">
@@ -86,17 +97,21 @@ const LogIn = () => {
                   id="pass"
                   className="form-control"
                   placeholder="Password"
-                  autoComplete="on"
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                  }}
+                  value={password}
                 />
               </div>
+              <button
+                className="btn btn-success btn2"
+                disabled={isSubmitting}
+                type="submit"
+              >
+                <i className="fas fa-user-plus"></i>Log In
+              </button>
             </form>
-            <button
-              onClick={() => login()}
-              type="submit"
-              className="btn btn-primary btn1"
-            >
-              <i className="fas fa-sign-in-alt"></i> Login
-            </button>
+
             <p
               style={{
                 textAlign: "center",
@@ -108,15 +123,12 @@ const LogIn = () => {
               OR
             </p>
             <Link to="/signup">
-              <button
-                //onClick="location.href='signUp.html'"
-                className="btn btn-success btn2"
-              >
+              <button className="btn btn-success btn2">
                 <i className="fas fa-user-plus"></i>Sign up
               </button>
             </Link>
             <div className="col-12 forget"></div>
-            <a href="/login" className="area" onClick={() => Reset_Email()}>
+            <a href="/login" className="area">
               Forgot Password ?
             </a>
           </div>

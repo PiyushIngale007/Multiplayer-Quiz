@@ -2,8 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   name: "",
-  email: "",
-  userID: "",
+  token: "",
+  userDetails: {},
+  // email: "",
 };
 
 const userSlice = createSlice({

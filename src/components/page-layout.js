@@ -15,7 +15,8 @@ import { GoSignOut } from "react-icons/go";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setCollapseStatus } from "../features/sidebar/sidebarSlice";
-import firebase from "../utils/firebase";
+import { setUserDetails } from "../features/user/userSlice";
+
 const PageLayout = (props) => {
   const location = useLocation();
 
@@ -24,13 +25,36 @@ const PageLayout = (props) => {
   const isCppQuiz = () => location.pathname === "CppQuiz";
   const isPythonQuiz = () => location.pathname === "PythonQuiz";
   const ishome = () => location.pathname === "Home";
+  const user = useSelector((state) => state.user);
 
   const textIcon = (text) => <strong className="m-0 arial">{text}</strong>;
   const status = useSelector((state) => state.sidebar.collapseStatus);
   const dispatch = useDispatch();
 
   const signOut = () => {
-    firebase.auth().signOut();
+    fetch("http://localhost:5000/api/user/logout", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    }).then(async (response) => {
+      // setUserContext(oldValues => {
+      //   return { ...oldValues, details: undefined, token: null }
+      // })
+      console.log(response);
+
+      let data1 = {
+        name: "",
+        token: "",
+        // email: email,
+      };
+
+      dispatch(setUserDetails(data1));
+
+      window.localStorage.setItem("logout", Date.now());
+    });
   };
   return (
     <div className="layout">

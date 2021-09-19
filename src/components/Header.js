@@ -9,10 +9,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import firebase from "../utils/firebase";
+
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import StickyBox from "react-sticky-box/dist/esnext";
+import { setUserDetails } from "../features/user/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,16 +33,11 @@ const Header = (props) => {
 
   const [userData, setuserData] = useState({});
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      const res = await axios.get(
-        "http://localhost:5000/api/user/profile/" + user.userID
-      );
+  const dispatch = useDispatch();
 
-      setuserData(res.data);
-    };
-    fetchdata();
-  }, [user.userID]);
+  useEffect(() => {
+    setuserData(user.userDetails);
+  }, [user.userDetails]);
 
   const open = Boolean(anchorEl);
 
@@ -54,7 +50,24 @@ const Header = (props) => {
   };
 
   const signOut = () => {
-    firebase.auth().signOut();
+    fetch("http://localhost:5000/api/user/logout", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    }).then(async (response) => {
+      let data1 = {
+        name: "",
+        token: "",
+        // email: email,
+      };
+
+      dispatch(setUserDetails(data1));
+
+      window.localStorage.setItem("logout", Date.now());
+    });
   };
 
   return (
@@ -73,10 +86,9 @@ const Header = (props) => {
               onClick={handleMenu}
               color="inherit"
             >
-              <div
-                dangerouslySetInnerHTML={{ __html: userData.svgAvatar }}
-                style={{ width: "40px" }}
-              ></div>
+              <div style={{ width: "40px" }}>
+                <img src={userData.svgAvatar}></img>
+              </div>
             </IconButton>
             <Menu
               id="menu-appbar"

@@ -5,32 +5,23 @@ import "./css/Profile.css";
 import { Button } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import { useSelector } from "react-redux";
-import axios from "axios";
 
 export default function Profile() {
   const user = useSelector((state) => state.user);
   const [userData, setuserData] = useState({});
 
   useEffect(() => {
-    const fetchdata = async () => {
-      const res = await axios.get(
-        "http://localhost:5000/api/user/profile/" + user.userID
-      );
-
-      setuserData(res.data);
-    };
-    fetchdata();
-  }, [user.userID]);
+    setuserData(user.userDetails);
+  }, [user.userDetails]);
 
   return (
     <PageLayout>
       <Header pageName="Profile" />
       <div className="profile">
         <div className="profile-container">
-          <div
-            dangerouslySetInnerHTML={{ __html: userData.svgAvatar }}
-            className="avatar"
-          ></div>
+          <div className="avatar">
+            <img src={userData.svgAvatar}></img>
+          </div>
 
           <p className="name">{user.name}</p>
           <div className="bio">
